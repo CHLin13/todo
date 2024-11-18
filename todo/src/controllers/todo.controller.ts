@@ -1,21 +1,36 @@
 import {service} from '@loopback/core';
 import {TodoService} from '../services/todo.service';
 import {repository} from '@loopback/repository';
-import {TodoRepository} from '../repositories';
+import {TodoRepository, ItemRepository} from '../repositories';
 import {post, param, get, requestBody, del, put} from '@loopback/rest';
 import {Todo, Item} from '../models';
 
 export class TodoController {
   constructor(
+    @repository(ItemRepository) public itemRepository: ItemRepository,
     @repository(TodoRepository) public todoRepository: TodoRepository,
     @service(TodoService) public todoService: TodoService,
   ) {}
 
   @post('/todos')
   async createTodo(
-    @requestBody() todoData: {todo: Todo; items: Item[]},
+    @requestBody() todoData: {todo: Todo, items: Item[]},
   ): Promise<Todo> {
-    return this.todoService.createTodoWithItems(todoData.todo, todoData.items);
+    if (!todoData.todo || !todoData.items) {
+      throw new Error("Todo or Items are missing");
+    }
+    const todo = await this.todoRepository.create(todoData.todo);
+
+    for (let itemData of todoData.items) {
+      console.log('Creating Item:', itemData);
+      if (!itemData.content || itemData.isCompleted === undefined) {
+        throw new Error("Item content or completion status is missing");
+      }
+        itemData.todoId = todo.id!;
+        await this.itemRepository.create(itemData);
+    }
+  
+    return todo;
   }
 
   @get('/todos')

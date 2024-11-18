@@ -1,7 +1,7 @@
-import {Entity, model, property, hasMany} from '@loopback/repository';
-import {Item} from './item.model';
+import {Entity, hasMany, model, property} from '@loopback/repository';
+import { Item } from './item.model';
 
-@model({settings: {strict: true}})
+@model()
 export class Todo extends Entity {
   @property({
     type: 'number',
@@ -14,7 +14,7 @@ export class Todo extends Entity {
     type: 'string',
     required: true,
   })
-  title: string = '';
+  title: string;
 
   @property({
     type: 'string',
@@ -24,22 +24,29 @@ export class Todo extends Entity {
   @property({
     type: 'string',
     required: true,
-    jsonSchema: {
-      enum: ['ACTIVE', 'INACTIVE'],
-    },
   })
-  status: string = 'ACTIVE';
+  status: string;
 
   @property({
     type: 'boolean',
-    default: false,
   })
   deleted?: boolean;
 
+  @property({
+    type: 'date',
+  })
+  createdAt?: string;
+
+  @property({
+    type: 'date',
+  })
+  updatedAt?: string;
+
   @hasMany(() => Item)
-  items: Item[] = [];
+  items: Item[];
 
   constructor(data?: Partial<Todo>) {
     super(data);
   }
 }
+

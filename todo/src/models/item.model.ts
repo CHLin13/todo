@@ -1,7 +1,7 @@
-import {Entity, model, property, belongsTo} from '@loopback/repository';
-import {Todo} from './todo.model';
+import {Entity, belongsTo, model, property} from '@loopback/repository';
+import { Todo } from './todo.model';
 
-@model({settings: {strict: true}})
+@model()
 export class Item extends Entity {
   @property({
     type: 'number',
@@ -14,23 +14,24 @@ export class Item extends Entity {
     type: 'string',
     required: true,
   })
-  content: string = '';
+  content: string;
 
   @property({
     type: 'boolean',
     required: true,
   })
-  isCompleted: boolean = false;
+  isCompleted: boolean;
 
   @property({
     type: 'date',
   })
-  completedAt?: string | null;
+  completedAt?: string;
 
   @belongsTo(() => Todo)
-  todoId: number = 0;
+  todoId: number;
 
   constructor(data?: Partial<Item>) {
     super(data);
   }
 }
+

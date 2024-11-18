@@ -12,7 +12,7 @@ export class TodoService {
   async createTodoWithItems(todoData: Todo, itemsData: Item[]): Promise<Todo> {
     const todo = await this.todoRepository.create(todoData);
     for (const item of itemsData) {
-      await this.todoRepository.items(todo.id).create(item);
+      await this.todoRepository.items(todo.id!).create(item);
     }
     return todo;
   }

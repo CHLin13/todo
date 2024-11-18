@@ -25,7 +25,7 @@ export class Item extends Entity {
   @property({
     type: 'date',
   })
-  completedAt?: string;
+  completedAt?: string | null;
 
   @belongsTo(() => Todo)
   todoId: number = 0;

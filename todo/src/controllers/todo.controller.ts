@@ -35,7 +35,12 @@ export class TodoController {
 
   @get('/todos')
   async findTodos(): Promise<Todo[]> {
-    return this.todoRepository.find({include: ['items']});
+    return this.todoRepository.find({
+      include: ['items'],where: {
+      deleted: {
+        neq: true, 
+      }}
+    });
   }
 
   @get('/todos/{id}')
@@ -48,7 +53,8 @@ export class TodoController {
     @param.path.number('id') id: number,
     @requestBody() todoData: Partial<Todo>,
   ): Promise<void> {
-    await this.todoRepository.updateById(id, todoData);
+    const { items, ...data } = todoData;
+    await this.todoRepository.updateById(id, data);
   }
 
   @del('/todos/{id}')

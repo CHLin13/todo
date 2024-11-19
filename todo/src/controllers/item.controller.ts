@@ -10,7 +10,6 @@ export class ItemController {
     @repository(TodoRepository) public todoRepository: TodoRepository,
   ) {}
 
-  // 取得某 Todo 下所有的 Items
   @get('/todos/{todoId}/items')
   async findItemsByTodoId(
     @param.path.string('todoId') todoId: string,
@@ -18,19 +17,16 @@ export class ItemController {
     return this.itemRepository.find({where: {todoId: Number(todoId)}});
   }
 
-  // 取得單一 Item by Id
   @get('/items/{id}')
   async findItemById(@param.path.string('id') id: string): Promise<Item> {
     return this.itemRepository.findById(Number(id));
   }
 
-  // 新增 Item
   @post('/items')
   async createItem(@requestBody() item: Item): Promise<Item> {
     return this.itemRepository.create(item);
   }
 
-  // 更新 Item by Id
   @put('/items/{id}')
   async updateItem(
     @param.path.string('id') id: string,
@@ -39,7 +35,6 @@ export class ItemController {
     await this.itemRepository.updateById(Number(id), item);
   }
 
-  // 刪除 Item by Id
   @del('/items/{id}')
   async deleteItem(@param.path.string('id') id: string): Promise<void> {
     await this.itemRepository.deleteById(Number(id));
